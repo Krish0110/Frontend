@@ -7,6 +7,7 @@ const VerificationForm = ({length,onChangeCode}) => {
   const [errorMessage,setErrorMessage]=useState("")
   const inputsRef = useRef([]);
 
+  //function to handle the change that occurs in the each code box
   const handleChange=(e,index)=>{
     const value=e.target.value
     if(value.match(/[0-9]/)){
@@ -22,6 +23,7 @@ const VerificationForm = ({length,onChangeCode}) => {
     }
   }
 
+  //function to handle the code submmission
   const handleSubmit=async (e)=>{
     e.preventDefault()
     if (code.some(val=>val==="")){
@@ -56,6 +58,7 @@ const VerificationForm = ({length,onChangeCode}) => {
     
   }
 
+  //function that will delete the value when we click backspace
   const handleBackspace=(element,index)=>{
     const newCode=[...code]
     newCode[index]=""
@@ -67,6 +70,8 @@ const VerificationForm = ({length,onChangeCode}) => {
     }
   }
 
+
+//function that will handle the copy paste function
   const handlePaste=(e)=>{
     const pasteValue=e.clipboardData.getData('text');
     if(pasteValue.length === length && /^[0-9]+$/.test(pasteValue)){
@@ -83,6 +88,7 @@ const VerificationForm = ({length,onChangeCode}) => {
     e.preventDefault();
   }
   
+  //returning the page
   return (
     <form className='verification-form' onSubmit={handleSubmit}>
       <h1>Verification Code</h1>
