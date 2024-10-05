@@ -16,10 +16,10 @@ const VerificationForm = ({length,onChangeCode}) => {
 
       setCode(newCode)
       onChangeCode(newCode.join(""))
-    }
 
-    if(index<(length-1) && value){
-      inputsRef.current[index+1].focus()
+      if(index<(length-1) && value){
+        inputsRef.current[index+1].focus()
+      }
     }
   }
 
