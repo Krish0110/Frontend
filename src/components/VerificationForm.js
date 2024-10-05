@@ -47,6 +47,12 @@ const VerificationForm = ({length,onChangeCode}) => {
     }catch(error){
       setErrorMessage("Verification Error")
     }
+
+    // Reset the code to empty after an error
+    setCode(new Array(length).fill(""));
+
+    // Optionally, reset the input fields' values in the DOM
+    inputsRef.current.forEach((input) => (input.value = ""));
     
   }
 
@@ -79,7 +85,7 @@ const VerificationForm = ({length,onChangeCode}) => {
   
   return (
     <form className='verification-form' onSubmit={handleSubmit}>
-      <h1>Enter 6-digit Code</h1>
+      <h1>Verification Code</h1>
       <div className='inputs-container'>
         {code.map((digit,index)=>(
           <input
