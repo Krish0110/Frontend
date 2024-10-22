@@ -1,7 +1,10 @@
 //page if verification successful
 const Success = () => {
   return (
-    <div>Success</div>
+    <div>
+          <div>Success</div>
+          <p>The verification was success</p>
+    </div>
   )
 }
 
