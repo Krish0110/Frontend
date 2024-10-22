@@ -72,21 +72,28 @@ const VerificationForm = ({length,onChangeCode}) => {
 
 
 //function that will handle the copy paste function
-  const handlePaste=(e)=>{
-    const pasteValue=e.clipboardData.getData('text');
-    if(pasteValue.length === length && /^[0-9]+$/.test(pasteValue)){
-      const newCode = pasteValue.split('');
-      setCode(newCode)
-      onChangeCode(newCode.join(""))
+  const handlePaste = (e, index) => {
+    e.preventDefault();  // Prevent the default paste behavior
+    const pasteValue = e.clipboardData.getData('text');
+    
+    if (/^[0-9]+$/.test(pasteValue)) {
+      const newCode = [...code];  
+  
 
-      newCode.forEach((digit, index) => {
-        inputsRef.current[index].value = digit;
-      });
+      const pastedDigits = pasteValue.split('');
 
-      inputsRef.current[length-1].focus();
+      for (let i = 0; i < pastedDigits.length && index + i < length; i++) {
+        newCode[index + i] = pastedDigits[i]; 
+        inputsRef.current[index + i].value = pastedDigits[i]; 
+      }
+  
+      setCode(newCode);
+      onChangeCode(newCode.join(""));
+  
+      inputsRef.current[Math.min(index + pastedDigits.length, length - 1)].focus();
     }
-    e.preventDefault();
-  }
+  };
+  
   
   //returning the page
   return (
@@ -101,7 +108,7 @@ const VerificationForm = ({length,onChangeCode}) => {
             value={digit}
             className='code-box'
             onChange={(e)=>handleChange(e,index)}
-            onPaste={index===0?handlePaste:null}
+            onPaste={(e)=>handlePaste(e,index)}
             ref={(element)=>(inputsRef.current[index]=element)}
             onKeyDown={e=>{
               if(e.key==='Backspace'){
