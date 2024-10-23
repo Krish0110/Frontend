@@ -7,6 +7,19 @@ const VerificationForm = ({length,onChangeCode}) => {
   const [errorMessage,setErrorMessage]=useState("")
   const inputsRef = useRef([]);
 
+
+  //A helper function that will update the code to avoid repetition of same code on handle functions
+  const updateCode=(newcode,index)=>{
+    setCode(newCode)
+    onChangeCode(newCode.join(""))
+
+    if(index<(length-1) && newcode[index]){
+      inputsRef.current[index+1].focus()
+    }else if(index >0 && newCode[index] === ""){
+      inputsRef.current[index-1].focus()
+    }
+
+  }
   //function to handle the change that occurs in the each code box
   const handleChange=(e,index)=>{
     const value=e.target.value
@@ -14,14 +27,37 @@ const VerificationForm = ({length,onChangeCode}) => {
       const newCode=[...code];
       newCode[index]=value
 
-      setCode(newCode)
-      onChangeCode(newCode.join(""))
-
-      if(index<(length-1) && value){
-        inputsRef.current[index+1].focus()
-      }
+      updateCode(newCode,index)
     }
   }
+
+  //function that will delete the value when we click backspace
+  const handleBackspace=(e,index)=>{
+    const newCode=[...code]
+    newCode[index]=""
+
+    updateCode(newcode,index)
+  }
+
+  //function that will handle the copy paste function
+  const handlePaste = (e, index) => {
+    e.preventDefault();  // Prevent the default paste behavior
+    const pasteValue = e.clipboardData.getData('text');
+    
+    if (/^[0-9]+$/.test(pasteValue)) {
+      const newCode = [...code];  
+      const pastedDigits = pasteValue.split('');
+
+      for (let i = 0; i < pastedDigits.length && index + i < length; i++) {
+        newCode[index + i] = pastedDigits[i]; 
+        inputsRef.current[index + i].value = pastedDigits[i]; 
+      }
+
+      updateCode(newCode,index)
+      // inputsRef.current[Math.min(index + pastedDigits.length, length - 1)].focus();
+    }
+  };
+  
 
   //function to handle the code submmission
   const handleSubmit=async (e)=>{
@@ -57,43 +93,6 @@ const VerificationForm = ({length,onChangeCode}) => {
     inputsRef.current.forEach((input) => (input.value = ""));
     
   }
-
-  //function that will delete the value when we click backspace
-  const handleBackspace=(element,index)=>{
-    const newCode=[...code]
-    newCode[index]=""
-    setCode(newCode)
-    onChangeCode(newCode.join(""))
-
-    if(index >0){
-      inputsRef.current[index-1].focus()
-    }
-  }
-
-
-//function that will handle the copy paste function
-  const handlePaste = (e, index) => {
-    e.preventDefault();  // Prevent the default paste behavior
-    const pasteValue = e.clipboardData.getData('text');
-    
-    if (/^[0-9]+$/.test(pasteValue)) {
-      const newCode = [...code];  
-  
-
-      const pastedDigits = pasteValue.split('');
-
-      for (let i = 0; i < pastedDigits.length && index + i < length; i++) {
-        newCode[index + i] = pastedDigits[i]; 
-        inputsRef.current[index + i].value = pastedDigits[i]; 
-      }
-  
-      setCode(newCode);
-      onChangeCode(newCode.join(""));
-  
-      inputsRef.current[Math.min(index + pastedDigits.length, length - 1)].focus();
-    }
-  };
-  
   
   //returning the page
   return (
