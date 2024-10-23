@@ -18,7 +18,16 @@ const VerificationForm = ({length,onChangeCode}) => {
     }else if(index >0 && newCode[index] === ""){
       inputsRef.current[index-1].focus()
     }
+  }
 
+  //A helper function to set the error message if any
+  const setError=(errorMessage)=>{
+    setErrorMessage(errorMessage)
+    // Reset the code to empty after an error
+    setCode(new Array(length).fill(""));
+
+    // Optionally, reset the input fields' values in the DOM
+    inputsRef.current.forEach((input) => (input.value = ""));
   }
   //function to handle the change that occurs in the each code box
   const handleChange=(e,index)=>{
@@ -85,12 +94,6 @@ const VerificationForm = ({length,onChangeCode}) => {
     }catch(error){
       setErrorMessage("Verification Error")
     }
-
-    // Reset the code to empty after an error
-    setCode(new Array(length).fill(""));
-
-    // Optionally, reset the input fields' values in the DOM
-    inputsRef.current.forEach((input) => (input.value = ""));
     
   }
   
