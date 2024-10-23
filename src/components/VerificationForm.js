@@ -9,11 +9,11 @@ const VerificationForm = ({length,onChangeCode}) => {
 
 
   //A helper function that will update the code to avoid repetition of same code on handle functions
-  const updateCode=(newcode,index)=>{
+  const updateCode=(newCode,index)=>{
     setCode(newCode)
     onChangeCode(newCode.join(""))
 
-    if(index<(length-1) && newcode[index]){
+    if(index<(length-1) && newCode[index]){
       inputsRef.current[index+1].focus()
     }else if(index >0 && newCode[index] === ""){
       inputsRef.current[index-1].focus()
@@ -34,9 +34,9 @@ const VerificationForm = ({length,onChangeCode}) => {
   //function that will delete the value when we click backspace
   const handleBackspace=(e,index)=>{
     const newCode=[...code]
-    newCode[index]=""
+    newCode[index-1]=""
 
-    updateCode(newcode,index)
+    updateCode(newCode,index)
   }
 
   //function that will handle the copy paste function
@@ -54,7 +54,7 @@ const VerificationForm = ({length,onChangeCode}) => {
       }
 
       updateCode(newCode,index)
-      // inputsRef.current[Math.min(index + pastedDigits.length, length - 1)].focus();
+      inputsRef.current[Math.min(index + pastedDigits.length, length - 1)].focus();
     }
   };
   
