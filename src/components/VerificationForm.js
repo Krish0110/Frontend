@@ -1,11 +1,34 @@
+/* eslint-disable linebreak-style */
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../config';
+import codeAllValue from '../utilis/codeAllValue';
+import useLoader from '../hooks/useLoader';
+import Loader from './Loader';
 
 function VerificationForm({ length, onChangeCode }) {
   const [code, setCode] = useState(new Array(length).fill(''));
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const inputsRef = useRef([]);
+
+  const verifyCodeApiCall = async () => {
+    const response = await fetch(`${baseUrl}api/verify-code`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: code.join('') }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Verification Error');
+    }
+    return response.json();
+  };
+
+  // using the custom hook
+  const { isLoading, executeApiCall: handleVerification } = useLoader(verifyCodeApiCall);
 
   // eslint-disable-next-line max-len
   // A helper function that will update the code to avoid repetition of same code on handle functions
@@ -72,25 +95,15 @@ function VerificationForm({ length, onChangeCode }) {
   // function to handle the code submmission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (code.some((val) => val === '')) {
-      setError('All Fields are Requires');
+    const message = codeAllValue(code);
+    if (message !== '') {
+      setError(message);
       return;
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}api/verify-code`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: code.join('') }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Verification Error');
-      } else {
-        navigate('/success');
-      }
+      await handleVerification();
+      navigate('/success');
     } catch (error) {
       setError('Verification Error');
     }
@@ -123,6 +136,7 @@ function VerificationForm({ length, onChangeCode }) {
       </div>
       {errorMessage && <p className="error">{errorMessage}</p>}
       <input type="submit" value="SUBMIT" className="btn" />
+      {isLoading && <Loader />}
     </form>
   );
 }

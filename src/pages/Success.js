@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 // page if verification successful
 function Success() {
   return (
