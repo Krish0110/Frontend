@@ -8,6 +8,7 @@ import VerificationForm from './components/VerificationForm';
 import Success from './pages/Success';
 // eslint-disable-next-line import/no-named-as-default
 import Verification from './pages/Verification';
+import DisplayUsers from './components/DisplayUsers';
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -32,6 +33,10 @@ function App() {
         <Route
           path="/verify"
           element={<Verification />}
+        />
+        <Route
+          path="/display-users"
+          element={<DisplayUsers />}
         />
 
       </Routes>

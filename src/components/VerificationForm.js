@@ -12,6 +12,8 @@ function VerificationForm({ length, onChangeCode }) {
   const [errorMessage, setErrorMessage] = useState('');
   const inputsRef = useRef([]);
 
+  console.log(baseUrl, 'BaseUrl');
+
   const verifyCodeApiCall = async () => {
     const response = await fetch(`${baseUrl}api/verify-code`, {
       method: 'POST',
